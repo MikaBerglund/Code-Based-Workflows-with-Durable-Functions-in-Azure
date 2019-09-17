@@ -16,7 +16,13 @@ namespace SampleDurableFunctionsApp
         public async Task<IEnumerable<string>> CrawlingMainAsync([OrchestrationTrigger]DurableOrchestrationContext context, ILogger logger)
         {
             var uri = context.GetInput<Uri>();
-            var html = await context.CallActivityAsync<string>(Names.DownloadHtml, uri);
+
+            // We use an activity function to download HTML from the URI specified as input. We use an extension method that incorporates
+            // a default retry logic, because we can't be sure that the resource is aways available.
+            var html = await context.CallActivityWithDefaultRetryAsync<string>(Names.DownloadHtml, uri);
+
+            // Links are parsed in another activity function. This is done without retry logic, because the activity function does not rely
+            // on external resources. This also shows how you can call activity functions without retry logic.
             var links = await context.CallActivityAsync<IEnumerable<string>>(Names.ParseLinks, html);
 
             return links;
