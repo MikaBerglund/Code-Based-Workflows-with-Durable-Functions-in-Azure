@@ -27,5 +27,10 @@ namespace SampleDurableFunctionsApp
         /// </summary>
         public const string ParseLinks = nameof(ParseLinks);
 
+        /// <summary>
+        /// The orchestration function that handles indexing of HTML. The input must be typed as <see cref="KeyValuePair"/> where the <c>Key</c> is a <see cref="Uri"/> representing the origin of the HTML. The <c>Value</c> is a <see cref="string"/> representing the HTML.
+        /// </summary>
+        public const string IndexHtml = nameof(IndexHtml);
+
     }
 }

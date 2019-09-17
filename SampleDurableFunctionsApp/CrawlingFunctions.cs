@@ -28,12 +28,28 @@ namespace SampleDurableFunctionsApp
             return links;
         }
 
+        [FunctionName(Names.IndexHtml)]
+        public async Task IndexHtmlAsync([OrchestrationTrigger]DurableOrchestrationContext context, ILogger logger)
+        {
+            // This method just demonstrates how you can start new orchestrations even from activity functions. This
+            // orchestration is triggered from the DownloadHtmlAsync function below.
+            var input = context.GetInput<KeyValuePair<Uri, string>>();
+            var uri = input.Key;
+            var html = input.Value;
+
+        }
+
         [FunctionName(Names.DownloadHtml)]
-        public async Task<string> DownloadHtmlAsync([ActivityTrigger]DurableActivityContext context, ILogger logger)
+        public async Task<string> DownloadHtmlAsync([ActivityTrigger]DurableActivityContext context, [OrchestrationClient]DurableOrchestrationClient orchestrationClient, ILogger logger)
         {
             var uri = context.GetInput<Uri>();
             var client = new HttpClient();
             var html = await client.GetStringAsync(uri);
+
+            // This just shows you how you could fire up new orchestrations even from an activity function. You just add a DurableOrchestrationClient
+            // parameter to the signature with the OrchestrationClient attribute.
+            await orchestrationClient.StartNewAsync(Names.IndexHtml, new KeyValuePair<Uri, string>(uri, html));
+
             return html;
         }
 
@@ -57,5 +73,7 @@ namespace SampleDurableFunctionsApp
 
             return await Task.FromResult(list);
         }
+
     }
+
 }
