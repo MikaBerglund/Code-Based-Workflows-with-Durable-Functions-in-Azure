@@ -18,9 +18,14 @@ namespace SampleDurableFunctionsApp
         public const string CrawlingMain = nameof(CrawlingMain);
 
         /// <summary>
-        /// The activity function that downloads the HTML from the given URL. The input to the function must be a <see cref="Uri"/> to download from.
+        /// The activity function that downloads the HTML from the given URL. The HTML is returned as a string by the activity function. The input to the function must be a <see cref="Uri"/> to download from.
         /// </summary>
         public const string DownloadHtml = nameof(DownloadHtml);
+
+        /// <summary>
+        /// The activity function that 
+        /// </summary>
+        public const string ParseLinks = nameof(ParseLinks);
 
     }
 }

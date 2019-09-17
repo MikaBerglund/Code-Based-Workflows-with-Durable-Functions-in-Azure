@@ -29,6 +29,6 @@ namespace SampleDurableFunctionsApp
             var instanceId = await client.StartNewAsync(Names.CrawlingMain, new Uri(url));
             return client.CreateCheckStatusResponse(request, instanceId);
         }
-
+        
     }
 }
