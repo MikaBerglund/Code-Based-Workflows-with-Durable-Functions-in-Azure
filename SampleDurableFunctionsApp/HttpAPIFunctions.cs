@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using System;
@@ -14,8 +15,8 @@ namespace SampleDurableFunctionsApp
     public class HttpAPIFunctions
     {
 
-        [FunctionName(Names.StartCrawlingHttp)]
-        public async Task<HttpResponseMessage> StartCrawlingHttpAsync([HttpTrigger(authLevel: AuthorizationLevel.Function)]HttpRequestMessage request, [OrchestrationClient]DurableOrchestrationClient client, ILogger logger)
+        [FunctionName(nameof(StartCrawlingHttp))]
+        public async Task<HttpResponseMessage> StartCrawlingHttp([HttpTrigger(authLevel: AuthorizationLevel.Function)]HttpRequestMessage request, [DurableClient] IDurableOrchestrationClient client, ILogger logger)
         {
             var url = request.RequestUri.ParseQueryString()?.GetValues("uri")?.FirstOrDefault();
             if(string.IsNullOrEmpty(url))
@@ -26,7 +27,7 @@ namespace SampleDurableFunctionsApp
                 };
             }
 
-            var instanceId = await client.StartNewAsync(Names.CrawlingMain, new Uri(url));
+            var instanceId = await client.StartNewAsync(nameof(CrawlingFunctions.CrawlingMain), new Uri(url));
             return client.CreateCheckStatusResponse(request, instanceId);
         }
         

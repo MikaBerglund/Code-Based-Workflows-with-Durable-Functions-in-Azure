@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.WebJobs;
+﻿using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,12 +17,12 @@ namespace SampleDurableFunctionsApp
         /// </summary>
         private static RetryOptions defaultRetryOptions = new RetryOptions(TimeSpan.FromMinutes(1), 10);
 
-        public static async Task CallActivityWithDefaultRetryAsync(this DurableOrchestrationContext context, string functionName, object input = null)
+        public static async Task CallActivityWithDefaultRetryAsync(this IDurableOrchestrationContext context, string functionName, object input = null)
         {
             await context.CallActivityWithRetryAsync(functionName, defaultRetryOptions, input);
         }
 
-        public static async Task<TResult> CallActivityWithDefaultRetryAsync<TResult>(this DurableOrchestrationContext context, string functionName, object input = null)
+        public static async Task<TResult> CallActivityWithDefaultRetryAsync<TResult>(this IDurableOrchestrationContext context, string functionName, object input = null)
         {
             return await context.CallActivityWithRetryAsync<TResult>(functionName, defaultRetryOptions, input);
         }
